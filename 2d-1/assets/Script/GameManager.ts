@@ -1,5 +1,5 @@
-import { _decorator, CCInteger, Component, Prefab, Node, instantiate } from 'cc';
-import { BLOCK_SIZE } from './PlayerController';
+import { _decorator, CCInteger, Component, Prefab, Node, instantiate, Label, Vec3 } from 'cc';
+import { BLOCK_SIZE, PlayerController } from './PlayerController';
 
 const { ccclass, property } = _decorator;
 enum BlockType {
@@ -13,8 +13,9 @@ enum GameState {
     GS_END,
 };
 
-@ccclass('GameController')
-export class GameController extends Component {
+
+@ccclass('GameManager')
+export class GameManager extends Component {
 
     @property({ type: Prefab })
     public boxPrefab: Prefab | null = null;
@@ -23,6 +24,12 @@ export class GameController extends Component {
     public roadLength: number = 50;
     private _road: BlockType[] = [];
 
+    @property({ type: Node })
+    public startMenu: Node | null = null; // 开始的 UI
+    @property({ type: PlayerController })
+    public playerCtrl: PlayerController | null = null; // 角色控制器
+    @property({ type: Label })
+    public stepsLabel: Label | null = null; // 计步器
 
     generateRoad() {
         this.node.removeAllChildren();
@@ -58,18 +65,41 @@ export class GameController extends Component {
         switch (value) {
             case GameState.GS_INIT:
                 this.init();
-
                 break;
             case GameState.GS_PLAYING:
+                if (this.startMenu) {
+                    this.startMenu.active = false;
+                }
+                if (this.stepsLabel) {
+                    this.stepsLabel.string = '0';   // 将步数重置为0
+                }
+                setTimeout(() => {      //直接设置active会直接开始监听鼠标事件，做了一下延迟处理
+                    if (this.playerCtrl) {
+                        this.playerCtrl.setInputActive(true);
+                    }
+                }, 0.1);
                 break;
             case GameState.GS_END:
                 break;
         }
     }
 
-    init() { }
+    init() {
+        if (this.startMenu) {
+            this.startMenu.active = true;
+        }
+        this.generateRoad();
 
+        if (this.playerCtrl) {
+            this.playerCtrl.setInputActive(false);
+            this.playerCtrl.node.setPosition(Vec3.ZERO);
+            this.playerCtrl.reset();
+        }
+    }
 
+    onStartButtonClicked() {
+        this.setCurState(GameState.GS_PLAYING);
+    }
     spawnBlockByType(type: BlockType) {
         let block: Node | null = null;
         switch (type) {
@@ -81,7 +111,7 @@ export class GameController extends Component {
     }
 
     start() {
-        this.generateRoad();
+        this.setCurState(GameState.GS_INIT); // 第一初始化要在 start 里面调用
     }
 
     update(deltaTime: number) {

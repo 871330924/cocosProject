@@ -12,15 +12,23 @@ export class PlayerController extends Component {
     private _curPos: Vec3 = new Vec3();
     private _deltaPos: Vec3 = new Vec3(0, 0, 0);
     private _targetPos: Vec3 = new Vec3();
+    private _curMoveIndex: number = 0;
 
     @property(Animation)
     BodyAnim: Animation = null;
 
 
     start() {
-        input.on(Input.EventType.MOUSE_UP, this.onMouseUp, this);
+        // input.on(Input.EventType.MOUSE_UP, this.onMouseUp, this);
     }
 
+    setInputActive(active: boolean) {
+        if (active) {
+            input.on(Input.EventType.MOUSE_UP, this.onMouseUp, this);
+        } else {
+            input.off(Input.EventType.MOUSE_UP, this.onMouseUp, this);
+        }
+    }
     onMouseUp(event: EventMouse) {
         if (event.getButton() === 0) {
             this.jumpByStep(1);
@@ -67,6 +75,12 @@ export class PlayerController extends Component {
                 this.node.setPosition(this._curPos);
             }
         }
+    }
+
+    reset() {
+        this._curMoveIndex = 0;
+        this.node.getPosition(this._curPos);
+        this._targetPos.set(0, 0, 0);
     }
 }
 
