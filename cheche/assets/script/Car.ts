@@ -1,4 +1,4 @@
-import { _decorator, Collider, Component, Input, input, Node, Vec3 } from 'cc';
+import { _decorator, Button, Collider, Component, director, Input, input, Label, Node, Vec3 } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('Car')
@@ -16,7 +16,17 @@ export class Car extends Component {
     @property
     Player_Speed = 30;
 
+    //导入UI节点，并控制节点的显示，隐藏和销毁
+    @property(Node)
+    Tips : Node = null;
+
+    @property(Label)
+    Tips_Label : Label = null;
+     
+
     Player_Move = {a:false,d:false};
+
+    Move_Flag = true;
 
     protected onLoad(): void {
         //加载函数加载键盘监听
@@ -25,6 +35,8 @@ export class Car extends Component {
 
         //加载碰撞节点
         this.Player_Collider.on("onTriggerEnter",this.Start_Collider,this); 
+
+  
     }
 
     protected onDestroy(): void {
@@ -52,8 +64,20 @@ export class Car extends Component {
         }
     }
 
-    Start_Collider(){
+    Start_Collider(C){
+        //Tips组件激活
+        this.Tips.active = true;
+        this.Move_Flag = false;
         console.log("发生碰撞");
+        const name = C.otherCollider.node.name;
+        if(name == "final"){
+            this.Tips_Label.string = "win";
+            console.log("win");
+        }else {
+            this.Tips_Label.string = "lose";
+            console.log("lose");
+        }
+
     }
 
 
@@ -62,6 +86,11 @@ export class Car extends Component {
     }
 
     update(deltaTime: number) {
+        if(!this.Move_Flag){
+            return;
+        }
+
+
         //生成时间变量车速
         const DPlayer_Speed = this.Player_Speed * deltaTime;
         //每过一帧，小车移动一定距离
@@ -77,6 +106,20 @@ export class Car extends Component {
         //获取相机位置
         const Camera_Pos = this.Camera_Node.getPosition();
         this.Camera_Node.setPosition(Camera_Pos.x,Camera_Pos.y,Camera_Pos.z - 0.1*DPlayer_Speed);
+   }
+
+    Restart_Game(){
+        // //第一种写法
+        // //隐藏提示框
+        // this.Tips.active = false;
+        // //初始化赛车位置
+        // this.node.setPosition(new Vec3(0,0.25,-0.5));
+        // //初始化相机位置
+        // this.Camera_Node.setPosition(new Vec3(0,4.608,6.919));
+        // //开启移动开关
+        // this.Move_Flag = true;
+        //第二种写法-导演功能
+        director.loadScene("cheche");
     }
 }
 
