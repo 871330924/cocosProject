@@ -388,7 +388,7 @@
     "Camera_Node": {
       "__id__": 5
     },
-    "Player_Speed": 10,
+    "Player_Speed": 20,
     "Tips": {
       "__id__": 12
     },
@@ -2566,7 +2566,7 @@
       "__type__": "cc.Vec3",
       "x": 0,
       "y": 0.343,
-      "z": -8.106
+      "z": -19.099
     },
     "_lrot": {
       "__type__": "cc.Quat",
