@@ -16,6 +16,8 @@ export class bazi extends Component {
     @property(Node)//加载箭的父节点
     Arrow_Parent_Node = null;
 
+    Game_Flag :boolean= true;
+
     protected onLoad(): void {
         //开启监听触摸事件
         input.on(Input.EventType.TOUCH_START,this.TOUCH_START ,this);
@@ -27,6 +29,9 @@ export class bazi extends Component {
     }
 
     TOUCH_START(){
+        if(!this.Game_Flag){
+                return;
+        }          
         const Arrow_Node = instantiate(this.Arrow_Prefab);//从预制体初始化
         Arrow_Node.setParent(this.Arrow_Parent_Node);//设置父节点
         //开启组件监听
@@ -42,10 +47,12 @@ export class bazi extends Component {
     }
 
     Begin_Contact(){
+        this.Game_Flag = false;
         console.log("碰撞");
     }
 
     Arrow_To_Bazi(Arrow_Node:Node){
+            
             const World_Pos = Arrow_Node.getWorldPosition();//获取世界坐标
             Arrow_Node.setParent(this.Bazi);//设置父节点为箭靶节点
             Arrow_Node.setWorldPosition(World_Pos);//重设世界坐标
@@ -59,6 +66,9 @@ export class bazi extends Component {
 
 
     update(deltaTime: number) {
+         if(!this.Game_Flag){//游戏结束
+                return;
+        }          
         this.Bazi.angle = (this.Bazi.angle + this.Angle_Speed*deltaTime) % 360;//自增并取模
     }
 
