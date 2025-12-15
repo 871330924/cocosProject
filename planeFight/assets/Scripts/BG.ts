@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, Vec3 } from 'cc';
+import { _decorator, CCInteger, Component, Node, Vec3 } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('BG')
@@ -8,8 +8,8 @@ export class BG extends Component {
     @property(Node)
     bg : Node = null;
 
-    @property()
-    speed:number = 200;
+    @property(CCInteger)
+    speed = 200;
 
     start() {
 
