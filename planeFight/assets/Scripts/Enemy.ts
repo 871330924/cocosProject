@@ -11,7 +11,6 @@ export class Enemy extends Component {
     protected onLoad(): void {
         //开始给飞机一个随机的偏移量
         let a = (Math.random() * 460 -230);
-        console.log(a);
         this.node.position = this.node.position.add(new Vec3(a,0,0));
     }
 
