@@ -47,7 +47,7 @@ export class Player extends Component {
     update(deltaTime: number) {
         this.bulletTimer += deltaTime;
         if (this.bulletTimer > this.bulletRate) {
-            this.bulletCreate(ShootType.TwoShoot);
+            this.bulletCreate(ShootType.OneShoot);
             this.bulletTimer -= this.bulletRate;
         }
 

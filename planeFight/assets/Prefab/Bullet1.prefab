@@ -211,7 +211,7 @@
     "awakeOnLoad": true,
     "_group": 1,
     "_type": 1,
-    "_allowSleep": true,
+    "_allowSleep": false,
     "_gravityScale": 1,
     "_linearDamping": 0,
     "_angularDamping": 0,
@@ -237,6 +237,7 @@
       "__id__": 0
     },
     "fileId": "fcdhlFVUxG/51mZpvEEHYf",
+    "instance": null,
     "targetOverrides": null
   }
 ]

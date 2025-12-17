@@ -1,5 +1,7 @@
-import { _decorator, Component, Node, Vec3 } from 'cc';
+import { _decorator, BoxCollider, Collider2D, Component, Contact2DType, Node, Vec3, Animation, CCString, IPhysics2DContact, RigidBody2D } from 'cc';
 const { ccclass, property } = _decorator;
+
+
 
 @ccclass('Enemy')
 export class Enemy extends Component {
@@ -8,10 +10,56 @@ export class Enemy extends Component {
     @property
     speed = 200;
 
+    //导入对象的碰撞器
+    collider: Collider2D = null;
+    //导入对象动画
+    animationComponent: Animation = null;
+    //定义动画名称
+    @property(CCString)
+    animHit: string = "";
+    @property(CCString)
+    animDie: string = "";
+
+    //定义飞机血量
+    @property
+    hp = 1;
+    //定义飞机状态
+    alive = true;
+
     protected onLoad(): void {
         //开始给飞机一个随机的偏移量
-        let a = (Math.random() * 460 -230);
-        this.node.position = this.node.position.add(new Vec3(a,0,0));
+        let a = (Math.random() * 460 - 230);
+        this.node.position = this.node.position.add(new Vec3(a, 0, 0));
+        //加载碰撞器
+        this.collider = this.getComponentInChildren(Collider2D);
+        //开启碰撞器监听
+        this.collider.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
+        this.animationComponent = this.getComponentInChildren(Animation);
+        //
+    }
+
+    onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
+        //禁用子弹刚体
+        otherCollider.node.getComponent(RigidBody2D).enabled = false;
+        otherCollider.enabled =  false;
+        otherCollider.node.destroy();
+        //血量-1
+        this.hp -= 1
+        if(this.hp > 0 ){
+            //播放被打击的动画
+            this.animationComponent.play(this.animHit);
+        }else{
+            //意味着死亡，关闭各种监听器
+            this.alive = false;
+            //关闭碰撞器监听
+            this.collider.off(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
+            //播放爆炸动画
+            this.animationComponent.play(this.animDie);
+            //延迟一秒后摧毁
+            this.scheduleOnce(function () {
+                this.node.destroy();
+            }, 1)
+        }
     }
 
     start() {
@@ -19,7 +67,19 @@ export class Enemy extends Component {
     }
 
     update(deltaTime: number) {
-        this.node.position = this.node.position.add(new Vec3(0,-this.speed*deltaTime,0));
+        if (this.alive) {
+            //存活则继续移动
+            this.node.position = this.node.position.add(new Vec3(0, -this.speed * deltaTime, 0));
+            //如果移动到屏幕外则销毁
+            if (this.node.position.y < -700) {
+                this.node.destroy();
+            }
+        }
+    }
+
+    protected onDestroy(): void {
+
+
     }
 }
 
