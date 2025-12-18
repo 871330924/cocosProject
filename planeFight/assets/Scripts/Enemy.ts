@@ -39,10 +39,7 @@ export class Enemy extends Component {
     }
 
     onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
-        //禁用子弹刚体
-        otherCollider.node.getComponent(RigidBody2D).enabled = false;
-        otherCollider.enabled =  false;
-        otherCollider.node.destroy();
+
         //血量-1
         this.hp -= 1
         if(this.hp > 0 ){
@@ -53,6 +50,10 @@ export class Enemy extends Component {
             this.alive = false;
             //关闭碰撞器监听
             this.collider.off(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
+            //关闭碰撞器
+            this.collider.enabled = false;
+            //关闭刚体
+            this.node.getComponentInChildren(RigidBody2D).enabled = false;
             //播放爆炸动画
             this.animationComponent.play(this.animDie);
             //延迟一秒后摧毁
@@ -60,6 +61,10 @@ export class Enemy extends Component {
                 this.node.destroy();
             }, 1)
         }
+        //         //禁用子弹刚体
+        // otherCollider.node.getComponent(RigidBody2D).enabled = false;
+        // otherCollider.enabled =  false;
+        // otherCollider.node.destroy();
     }
 
     start() {
