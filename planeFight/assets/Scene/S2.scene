@@ -527,12 +527,17 @@
       {
         "__uuid__": "5eccfbbc-9645-4767-8cfd-da4de8c20783",
         "__expectedType__": "cc.AnimationClip"
+      },
+      {
+        "__uuid__": "fd43b246-f46b-4d8d-9798-6166abf5c5cf",
+        "__expectedType__": "cc.AnimationClip"
+      },
+      {
+        "__uuid__": "bcb5f983-2572-4d8a-919f-496f65912099",
+        "__expectedType__": "cc.AnimationClip"
       }
     ],
-    "_defaultClip": {
-      "__uuid__": "5eccfbbc-9645-4767-8cfd-da4de8c20783",
-      "__expectedType__": "cc.AnimationClip"
-    },
+    "_defaultClip": null,
     "_id": "42e0/8bQBGEZzOlin6s9iR"
   },
   {
@@ -545,7 +550,7 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "enabledContactListener": false,
+    "enabledContactListener": true,
     "bullet": false,
     "awakeOnLoad": true,
     "_group": 1,
@@ -592,23 +597,23 @@
       },
       {
         "__type__": "cc.Vec2",
-        "x": 47.1,
-        "y": 1.4
+        "x": 28.8,
+        "y": 11.9
       },
       {
         "__type__": "cc.Vec2",
-        "x": 48.1,
-        "y": -32.7
+        "x": 46.2,
+        "y": -21.9
       },
       {
         "__type__": "cc.Vec2",
-        "x": -48.5,
-        "y": -32.9
+        "x": -48.2,
+        "y": -23.7
       },
       {
         "__type__": "cc.Vec2",
-        "x": -47.1,
-        "y": 5.2
+        "x": -31,
+        "y": 13.8
       }
     ],
     "_id": "d9iiwE6NhCJboqe69H/pXV"
@@ -673,6 +678,9 @@
       "__uuid__": "c8538092-406e-45df-9fb7-4e550b65a896",
       "__expectedType__": "cc.Prefab"
     },
+    "plane_down": "Plane_down",
+    "plane_hit": "Plane_hit",
+    "hp": 3,
     "bulletParent": {
       "__id__": 18
     },

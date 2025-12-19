@@ -1,4 +1,4 @@
-import { __private, _decorator, Component, EventTouch, Input, input, instantiate, Node, Prefab, Vec3 } from 'cc';
+import { __private, _decorator, Animation, CCInteger, Collider2D, Component, Contact2DType, EventTouch, Input, input, instantiate, IPhysics2DContact, Node, Prefab, Vec3 } from 'cc';
 const { ccclass, property } = _decorator;
 
 //添加子弹类型枚举
@@ -22,23 +22,68 @@ export class Player extends Component {
     @property(Prefab)
     bulletPrefab2: Prefab = null;
 
+    //定义动画
+    @property(String)
+    plane_down: string = "";
+    @property(String)
+    plane_hit: string = "";
 
+    //规划血量
+    @property(CCInteger)
+    hp = 3;
 
+    //定义飞机存活状态
+    alive = true;
+
+    //导入对象的碰撞器
+    collider: Collider2D = null;
 
     //引入子弹父节点
     @property(Node)
     bulletParent: Node = null;
+    //导入对象动画
+    animationComponent: Animation = null;
 
 
     protected onLoad(): void {
+        //开启触摸监听
         input.on(Input.EventType.TOUCH_MOVE, this.onTouchMove, this);
+        //加载碰撞器
+        this.collider = this.getComponentInChildren(Collider2D);
+        //加载动画组件
+        this.animationComponent = this.getComponentInChildren(Animation);
+        //开启碰撞器监听
+        this.collider.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
+
+    }
+
+    onBeginContact() {
+        //每次碰撞减少一滴血
+        this.hp -= 1;
+        console.log("1")
+        if (this.hp <= 0) {
+            //播放死亡动画
+            this.animationComponent.play("Plane_down");
+            this.alive = false;
+
+        } else {
+            //播放碰撞动画
+            this.animationComponent.play("Plane_hit");
+            //执行无敌时间
+
+        }
     }
     onTouchMove(event: EventTouch) {
-        this.node.setPosition(this.clamp(this.node.position.x + event.getDeltaX(), -230, 230), this.clamp(this.node.position.y + event.getDeltaY(), -420, 400), this.node.position.z)
+        if (this.alive) {
+            this.node.setPosition(this.clamp(this.node.position.x + event.getDeltaX(), -230, 230), this.clamp(this.node.position.y + event.getDeltaY(), -420, 400), this.node.position.z)
+        }
     }
 
     protected onDestroy(): void {
+        //关闭触摸监听
         input.off(Input.EventType.TOUCH_MOVE, this.onTouchMove, this);
+        //关闭碰撞监听
+        this.collider.off(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
     }
 
     start() {

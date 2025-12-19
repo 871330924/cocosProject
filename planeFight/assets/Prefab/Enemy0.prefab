@@ -234,7 +234,7 @@
       "__id__": 10
     },
     "tag": 0,
-    "_group": 1,
+    "_group": 4,
     "_density": 1,
     "_sensor": false,
     "_friction": 0.2,
@@ -334,6 +334,7 @@
     "speed": 100,
     "animHit": "",
     "animDie": "Enemy_0",
+    "hp": 1,
     "_id": ""
   },
   {
