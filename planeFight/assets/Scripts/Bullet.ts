@@ -32,6 +32,11 @@ export class Bullet extends Component {
         }
     }
 
+    protected onDestroy(): void {
+        //关闭碰撞器监听
+        this.collider.off(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
+    }
+
 }
 
 

@@ -1,4 +1,4 @@
-import { __private, _decorator, Animation, CCInteger, Collider2D, Component, Contact2DType, EventTouch, Input, input, instantiate, IPhysics2DContact, Node, Prefab, Vec3 } from 'cc';
+import { __private, _decorator, Animation, CCInteger, CCString, Collider2D, Component, Contact2DType, EventTouch, Input, input, instantiate, IPhysics2DContact, Node, Prefab, Vec3 } from 'cc';
 const { ccclass, property } = _decorator;
 
 //添加子弹类型枚举
@@ -23,9 +23,9 @@ export class Player extends Component {
     bulletPrefab2: Prefab = null;
 
     //定义动画
-    @property(String)
+    @property(CCString)
     plane_down: string = "";
-    @property(String)
+    @property(CCString)
     plane_hit: string = "";
 
     //规划血量
@@ -65,12 +65,13 @@ export class Player extends Component {
             //播放死亡动画
             this.animationComponent.play("Plane_down");
             this.alive = false;
+            this.collider.enabled = false;
+
 
         } else {
             //播放碰撞动画
             this.animationComponent.play("Plane_hit");
             //执行无敌时间
-
         }
     }
     onTouchMove(event: EventTouch) {
@@ -90,6 +91,7 @@ export class Player extends Component {
     }
 
     update(deltaTime: number) {
+        if (!this.alive) return;
         this.bulletTimer += deltaTime;
         if (this.bulletTimer > this.bulletRate) {
             this.bulletCreate(ShootType.OneShoot);
